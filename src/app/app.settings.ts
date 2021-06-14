@@ -1,5 +1,7 @@
+declare const process: any;
+
 export const appSettings = {
-  apiKey: '9a3fc49b4cb180c10ae730aeda6439f5',
+  apiKey: process.env.OWM_API_KEY, //'',
   apiHost: 'http://api.openweathermap.org/',
   apiPath: 'data/2.5/',
   getApiUrl: (endpoint: string): string =>

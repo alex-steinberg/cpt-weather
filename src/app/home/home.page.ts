@@ -4,6 +4,8 @@ import { TempToggleEvent, TempUnit } from '../models/ui.model';
 import { Observable } from 'rxjs';
 import { WeatherService } from '../services/weather.service';
 
+declare const process: { env: { [OWM_API_KEY: string]: string } };
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -16,6 +18,8 @@ export class HomePage {
   weatherDesc$: Observable<string> = this.weatherService.currentDescription$;
   weatherTemp$: Observable<number> = this.weatherService.currentTemp$;
   weatherSummary$: Observable<string> = this.weatherService.currentSummary$;
+
+  env: any = process.env.OWM_API_KEY || '';
 
   constructor(
     private uiService: UiService,
