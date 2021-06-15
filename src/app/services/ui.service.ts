@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TempUnit, UiState } from '../models/ui.model';
 import { map } from 'rxjs/operators';
+import { AlertController, ToastController } from '@ionic/angular';
 
 let state: UiState = {
-  unit: 'C',
+  unit: 'metric',
 };
 
 @Injectable({
@@ -17,7 +18,10 @@ export class UiService {
     .asObservable()
     .pipe(map((state) => state.unit));
 
-  constructor() {
+  constructor(
+    private alertController: AlertController,
+    private toastController: ToastController
+  ) {
     this.initState();
   }
 
@@ -33,5 +37,46 @@ export class UiService {
     state = { ...state, unit: newUnit };
     this.store.next(state);
     window.localStorage.setItem(this.storageKey, JSON.stringify(state));
+  }
+
+  async showAlert(options: {
+    header?: string;
+    message: string;
+    buttons: any[];
+  }): Promise<any> {
+    const { header, message, buttons = ['OK'] } = options;
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons,
+    });
+
+    await alert.present();
+
+    return alert;
+  }
+
+  async showToast(options: {
+    header?: string;
+    message: string;
+    duration?: number;
+    buttons?: any[];
+    position?: 'top' | 'bottom' | 'middle';
+  }): Promise<any> {
+    const {
+      header,
+      message,
+      position = 'top',
+      buttons = null,
+      duration = 0, // Ionic default
+    } = options;
+    return await this.toastController.create({
+      header,
+      message,
+      position,
+      buttons,
+      duration,
+      color: 'primary',
+    });
   }
 }

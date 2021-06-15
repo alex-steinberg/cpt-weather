@@ -5,30 +5,47 @@
         [value]="tempUnit$ | async"
         (ionChange)="toggleTempUnit($event)"
       >
-        <ion-segment-button value="C"> &deg;C </ion-segment-button>
-        <ion-segment-button value="F"> &deg;F </ion-segment-button>
+        <ion-segment-button value="metric"> &deg;C </ion-segment-button>
+        <ion-segment-button value="imperial"> &deg;F </ion-segment-button>
       </ion-segment>
     </ion-buttons>
     <ion-title> Cape Town weather </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content
+  [fullscreen]="true"
+  *ngIf="{
+    temp: weatherTemp$ | async,
+    unit: tempUnit$ | async,
+    description: weatherDesc$ | async,
+    summary: weatherSummary$ | async,
+    dailies: dailies$ | async
+  } as data"
+>
   <ion-card>
     <ion-card-header>
       <ion-card-subtitle>Cape Town</ion-card-subtitle>
-      <ion-card-title
-        >{{ getWeather() }}{{ currentTemp() }}&deg;{{ getUnit()
-        }}</ion-card-title
+      <ion-card-title *ngIf="data.summary && data.temp"
+        >{{ data.summary }}, {{ data.temp[data.unit] | number: '1.0-0' }}&deg;{{
+        getSymbol(data.unit) }}</ion-card-title
       >
     </ion-card-header>
 
     <ion-card-content>
       <ion-list>
-        <ion-item>Description: {{ weatherDesc$ | async }}</ion-item>
-        <ion-item>Summary: {{ weatherSummary$ | async }}</ion-item>
-        <ion-item>Temp: {{ weatherTemp$ | async }}</ion-item>
-      </ion-list></ion-card-content
+        <ion-item *ngFor="let day of data.dailies">
+          <ion-grid
+            ><ion-row class="ion-justify-content-center">
+              <ion-col>{{ getDateTime(day.dt) }}</ion-col>
+              <ion-col class="ion-text-end"
+                >{{ day.temp[data.unit] | number:'1.0-0' }}&deg;{{
+                getSymbol(data.unit) }}</ion-col
+              ></ion-row
+            ></ion-grid
+          ></ion-item
+        ></ion-list
+      ></ion-card-content
     >
   </ion-card>
 </ion-content>

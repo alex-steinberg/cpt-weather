@@ -3,6 +3,10 @@ import { UiService } from '../services/ui.service';
 import { TempToggleEvent, TempUnit } from '../models/ui.model';
 import { Observable } from 'rxjs';
 import { WeatherService } from '../services/weather.service';
+import { TempReading, WeatherDaily } from '../models/weather.model';
+import { utcToZonedTime } from 'date-fns-tz';
+import { format, fromUnixTime } from 'date-fns';
+import { appSettings } from '../app.settings';
 
 declare const process: { env: { [OWM_API_KEY: string]: string } };
 
@@ -12,12 +16,11 @@ declare const process: { env: { [OWM_API_KEY: string]: string } };
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  // TODO subscribe to temp unit state
-  // TODO use async pipe to set segment's value
   tempUnit$: Observable<TempUnit> = this.uiService.tempUnitState$;
   weatherDesc$: Observable<string> = this.weatherService.currentDescription$;
-  weatherTemp$: Observable<number> = this.weatherService.currentTemp$;
+  weatherTemp$: Observable<TempReading> = this.weatherService.currentTemp$;
   weatherSummary$: Observable<string> = this.weatherService.currentSummary$;
+  dailies$: Observable<WeatherDaily[]> = this.weatherService.dailies$;
 
   env: any = process.env.OWM_API_KEY || '';
 
@@ -29,15 +32,14 @@ export class HomePage {
   toggleTempUnit(ev: TempToggleEvent): void {
     this.uiService.updateUnits(ev.detail.value);
   }
-  getWeather(): string {
-    return 'Partly cloudy';
+
+  getDateTime(dt: number): string {
+    const utcDate = fromUnixTime(dt);
+    const saDate = utcToZonedTime(utcDate, appSettings.baseTimeZone);
+    return format(saDate, appSettings.timeDateFormat);
   }
 
-  currentTemp(): number {
-    return 30;
-  }
-
-  getUnit(): string {
-    return 'C';
+  getSymbol(unit: TempUnit): string {
+    return unit === 'metric' ? 'C' : 'F';
   }
 }

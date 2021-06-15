@@ -1,16 +1,26 @@
 import { Deserializable } from './deserializable.model';
 
-class WeatherReadings implements Deserializable<WeatherReadings> {
-  temp: number;
-  feels_like?: number;
-  temp_min?: number;
-  temp_max?: number;
-  pressure?: number;
-  humidity?: number;
+export interface TempReading {
+  metric?: number;
+  imperial?: number;
+}
+export class WeatherDaily implements Deserializable<WeatherDaily> {
+  dt: number;
+  temp: TempReading = {};
+  weather: WeatherSummary;
 
-  setFromObject(json: any): WeatherReadings {
-    const { temp = null } = json;
-    this.temp = temp;
+  setFromObject?(json: any): WeatherDaily {
+    const {
+      dt,
+      temp: { day: temp },
+      unit,
+      weather,
+    } = json;
+    this.dt = dt;
+    this.temp[unit] = temp;
+    if (weather && weather.size > 0) {
+      this.weather = new WeatherSummary().setFromObject(weather[0]);
+    }
     return this;
   }
 }
@@ -32,21 +42,26 @@ export class WeatherSummary implements Deserializable<WeatherSummary> {
 }
 
 export class WeatherModel implements Deserializable<WeatherModel> {
-  id: number;
-  weather: WeatherSummary[];
-  main: WeatherReadings;
+  dt: number;
+  weather: WeatherSummary;
+  temp: TempReading = {};
+  daily: WeatherDaily[] = [];
 
   setFromObject(json: any): WeatherModel {
-    if (json.id) {
-      this.id = json.id;
+    const {
+      current: { temp: temp, weather: weather, dt: dt },
+      unit,
+      daily,
+    } = json;
+    this.dt = dt;
+    this.temp[unit] = temp;
+    if (weather && weather.length > 0) {
+      this.weather = new WeatherSummary().setFromObject(weather[0]);
     }
-    if (json.weather && json.weather.length > 0) {
-      this.weather = json.weather.map((item) =>
-        new WeatherSummary().setFromObject(item)
+    if (daily && daily.length > 0) {
+      this.daily = daily.map((item) =>
+        new WeatherDaily().setFromObject({ ...item, unit })
       );
-    }
-    if (json.main) {
-      this.main = new WeatherReadings().setFromObject(json.main);
     }
     return this;
   }
