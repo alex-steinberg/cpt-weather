@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UiService } from '../services/ui.service';
-import { TempToggleEvent, TempUnit } from '../models/ui.model';
+import { TempUnit } from '../models/ui.model';
 import { Observable } from 'rxjs';
 import { WeatherService } from '../services/weather.service';
 import { TempReading, WeatherDaily } from '../models/weather.model';
@@ -29,7 +29,7 @@ export class HomePage {
     private weatherService: WeatherService
   ) {}
 
-  toggleTempUnit(ev: TempToggleEvent): void {
+  toggleTempUnit(ev: any): void {
     this.uiService.updateUnits(ev.detail.value);
   }
 
