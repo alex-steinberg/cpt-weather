@@ -5,12 +5,13 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:prod": "ionic build --prod"
+    "build:prod": "ionic build --prod",
+    "heroku-postbuild": "npm run build:prod"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
     "express": "^4.17.1",
+    "path": "^0.12.7",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
