@@ -8,11 +8,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static("./www/cpt-weather"));
+app.use(express.static("./www/"));
 
-app.get("/*", (req, res) =>
-  res.sendFile("index.html", { root: "www/cpt-weather" })
-);
+app.get("/*", (req, res) => res.sendFile("index.html", { root: "www/" }));
 
 app.listen(port, () => {
   console.log(`app is listening to port ${port}`);
