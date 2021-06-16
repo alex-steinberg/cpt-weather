@@ -43,6 +43,7 @@
     "@angular/compiler-cli": "~12.0.1",
     "@angular/language-service": "~12.0.1",
     "@ionic/angular-toolkit": "^4.0.0",
+    "@ionic/cli": "^6.16.3",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
@@ -68,6 +69,7 @@
   },
   "description": "An Ionic project",
   "engines": {
-    "node": "14.x"
+    "node": "14.17.0",
+    "npm": "6.14.0"
   }
 }
