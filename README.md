@@ -12,9 +12,19 @@ Clone the app:
 
     git clone git@github.com:alex-steinberg/cpt-weather.git
 
+Change directories:
+
+    cd cpt-weather
+
 Install dependencies:
 
     npm i
+    
+Go to [openweathermap.org](https://openweathermap.org/) and create a free API key.
+
+Create an .env file in the root your with the API key stored as an environment variable `OWM_API_KEY`:
+
+    echo OWM_API_KEY=your-new-key-goes-here > .env
     
 To run the app for development: 
 
