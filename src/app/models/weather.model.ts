@@ -49,12 +49,12 @@ export class WeatherModel implements Deserializable<WeatherModel> {
 
   setFromObject(json: any): WeatherModel {
     const {
-      current: { temp: temp, weather: weather, dt: dt },
+      current: { temp, weather, dt },
       unit,
       daily,
     } = json;
     this.dt = dt;
-    this.temp[unit] = temp;
+    this.temp.metric = temp;
     if (weather && weather.length > 0) {
       this.weather = new WeatherSummary().setFromObject(weather[0]);
     }
