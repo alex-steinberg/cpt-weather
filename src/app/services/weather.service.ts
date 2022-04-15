@@ -5,13 +5,7 @@ import {
   WeatherDaily,
   WeatherModel,
 } from '../models/weather.model';
-import {
-  BehaviorSubject,
-  interval,
-  merge,
-  Observable,
-  Subscription,
-} from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { appSettings } from '../app.settings';
 import { TempUnit } from '../models/ui.model';
@@ -79,15 +73,10 @@ export class WeatherService {
   }
 
   subscribeToWeather(): void {
-    const metricUnit: TempUnit = 'metric';
-    const imperialUnit: TempUnit = 'imperial';
     const url =
       appSettings.getApiUrl(this.endpoints.weather) +
-      '&lat=-33.92&lon=18.42&exclude=minutely,hourly&units='; // cape town
-    this.weatherSubs = merge(
-      this.fetchWeather(url, metricUnit),
-      this.fetchWeather(url, imperialUnit)
-    )
+      '&lat=-33.92&lon=18.42&exclude=minutely,hourly&units=metric'; // Cape Town
+    this.weatherSubs = this.fetchWeather(url)
       .pipe(
         retryBackoff({
           initialInterval: this.retryInitial,
@@ -97,9 +86,7 @@ export class WeatherService {
         })
       )
       .subscribe(
-        (result: WeatherResult) => {
-          const { response, unit } = result;
-          response.unit = unit;
+        (response: WeatherResult) => {
           const weather = new WeatherModel().setFromObject(response);
           state = {
             ...state,
@@ -117,9 +104,7 @@ export class WeatherService {
             description: weather.weather.description,
           };
           this.store.next(state);
-          if (unit === 'metric') {
-            this.showHotColdAlert(state.temp.metric);
-          }
+          this.showHotColdAlert(state.temp.metric);
         },
         async (error) => {
           await this.httpToast.dismiss();
@@ -147,15 +132,10 @@ export class WeatherService {
     this.subscribeToWeather();
   }
 
-  fetchWeather(url: string, unit: TempUnit): Observable<any> {
-    url += unit;
+  fetchWeather(url: string): Observable<any> {
     return interval(this.pollingInterval).pipe(
       startWith(0),
-      switchMap(() => this.http.get(url)),
-      map((response) => ({
-        response,
-        unit,
-      }))
+      switchMap(() => this.http.get(url))
     );
   }
 

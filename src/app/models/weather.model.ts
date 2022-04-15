@@ -1,4 +1,5 @@
 import { Deserializable } from './deserializable.model';
+import { convertMetricToImperial } from '../services/utilities';
 
 export interface TempReading {
   metric?: number;
@@ -13,11 +14,11 @@ export class WeatherDaily implements Deserializable<WeatherDaily> {
     const {
       dt,
       temp: { day: temp },
-      unit,
       weather,
     } = json;
     this.dt = dt;
-    this.temp[unit] = temp;
+    this.temp.metric = temp;
+    this.temp.imperial = convertMetricToImperial(temp);
     if (weather && weather.size > 0) {
       this.weather = new WeatherSummary().setFromObject(weather[0]);
     }
@@ -50,7 +51,6 @@ export class WeatherModel implements Deserializable<WeatherModel> {
   setFromObject(json: any): WeatherModel {
     const {
       current: { temp, weather, dt },
-      unit,
       daily,
     } = json;
     this.dt = dt;
@@ -59,9 +59,7 @@ export class WeatherModel implements Deserializable<WeatherModel> {
       this.weather = new WeatherSummary().setFromObject(weather[0]);
     }
     if (daily && daily.length > 0) {
-      this.daily = daily.map((item) =>
-        new WeatherDaily().setFromObject({ ...item, unit })
-      );
+      this.daily = daily.map((item) => new WeatherDaily().setFromObject(item));
     }
     return this;
   }
