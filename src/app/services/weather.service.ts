@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   TempReading,
@@ -37,7 +37,7 @@ interface WeatherResult {
 @Injectable({
   providedIn: 'root',
 })
-export class WeatherService {
+export class WeatherService implements OnDestroy {
   endpoints = {
     weather: 'onecall',
   };
@@ -187,5 +187,9 @@ export class WeatherService {
       const dismiss = await alert.onDidDismiss();
       this.hotColdAlertShown = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.weatherSubs.unsubscribe();
   }
 }
