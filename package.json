@@ -68,7 +68,7 @@
   },
   "description": "An Ionic project",
   "engines": {
-    "node": "14.17.0",
-    "npm": "6.14.0"
+    "node": "16.14.2",
+    "npm": "v8.5.0"
   }
 }
