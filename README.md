@@ -12,7 +12,7 @@ Gives the current a daily forecast of Cape Town's weather (with "Cape Town" loos
 
 Typical Angular/Ionic installation steps apply.
 
-Install [Node LTS](https://nodejs.org/en/)
+Install [Node LTS Fermium](https://nodejs.org/download/release/latest-fermium/) -- ideally via [NVM](https://github.com/nvm-sh/nvm)
 
 Clone the app:
 
