@@ -1,10 +1,10 @@
 # Cape Town Weather
 
-Demo Angular app using Ionic 5 for UI components. Available at 
+Demo Angular app using Ionic 5 for UI components. Available at cape-weather dot steinrock dot co dot za
 
 Gives the current a daily forecast of Cape Town's weather (with "Cape Town" loosely defined as -33.92, 18.42 for the time being). Other features:
 
-- HTTP polling with exponential back-off to keep the weather up-to-date
+- HTTP polling with exponential back-off to keep the data up-to-date
 - Consumes openweathermap.org's REST API
 - Hot & cold weather warnings
 
@@ -68,5 +68,5 @@ artifacts:
 ```
 
 Note: the tests are rudimentary and this is not a rapidly changing codebase so the CI doesn't contain the test step.
-Running tests in CI requires installing a headless browsers at each build which adds an unnecessary expense to
+Running tests in CI requires installing a headless browser at each build which adds an unnecessary expense to
 the build pipeline for this demo project. 
